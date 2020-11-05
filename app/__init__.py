@@ -1,9 +1,15 @@
 from flask import Flask
 from app.models import db
+from dotenv import load_dotenv
+from os import getenv
+
+load_dotenv()
 
 
 class Config(object):
-    SECRET_KEY = 'dev',
+    SECRET_KEY = getenv('SECRET_KEY')
+
+    SERVER_NAME = getenv('SERVER_NAME')
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 
