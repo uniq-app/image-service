@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+
+  database:
+    image: 'mongo'
+    container_name: db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - ./mongo-volume:/data/db
+    ports:
+      - '27017-27019:27017-27019'
+
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./docker/image-service/Dockerfile
+    environment:
+      APP_MODULE: app.__init__:app
+    ports:
+      - 80:80
+    depends_on:
+      - database
+

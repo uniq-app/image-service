@@ -1,30 +1,35 @@
 from flask import Flask
-from app.models import db
+from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 from os import getenv
 
 load_dotenv()
 
+username = getenv('MONGO_INITDB_ROOT_USERNAME')
+password = getenv('MONGO_INITDB_ROOT_PASSWORD')
+
 
 class Config(object):
     SECRET_KEY = getenv('SECRET_KEY')
 
-    SERVER_NAME = getenv('SERVER_NAME')
-
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
-
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MONGO_URI = 'mongodb://%s:%s@127.0.0.1/images' % (username, password)
 
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object(Config())
 
-db.init_app(app)
+mongo = PyMongo(app)
+
+print('app init')
 
 with app.app_context():
+    print('after context')
     from . import models, controllers, services
 
-    db.create_all()
+    print('after context imports')
     models.init_app(app)
+    print('after context models')
     controllers.init_app(app)
+    print('after context controllers')
     services.init_app(app)
+    print('after context services')

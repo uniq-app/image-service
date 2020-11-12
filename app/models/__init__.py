@@ -1,9 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_pymongo import PyMongo
 
-db = SQLAlchemy()
+mongo = PyMongo()
 
 
 def init_app(app):
-    db.init_app(app)
-    db.app = app
     return app
