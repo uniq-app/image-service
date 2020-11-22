@@ -1,4 +1,4 @@
-FROM tiangolo/meinheld-gunicorn-flask:python3.8
+FROM tiangolo/meinheld-gunicorn:latest
 
 ADD ./app /app/app
 ADD ./requirements.txt /app/requirements.txt

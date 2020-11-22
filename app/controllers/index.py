@@ -8,6 +8,11 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/', methods=['GET'])
 def index():
+    return jsonify(status="Hello world!")
+
+
+@bp.route('/i', methods=['GET'])
+def i_get():
     image = {'test': 'test'}
     images.insert_one(image)
     rs = images.find({})
@@ -16,8 +21,8 @@ def index():
     return jsonify(status='ok')
 
 
-@bp.route('/', methods=['POST'])
-def save():
+@bp.route('/i', methods=['POST'])
+def i_save():
     id = uuid4()
     file = request.files.get('file')
     # if storage is not None:
