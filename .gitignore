@@ -131,3 +131,5 @@ dmypy.json
 
 # IDE's
 .idea/
+/app/db.sqlite
+/mongo-volume/
