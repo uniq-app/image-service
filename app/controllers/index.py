@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, send_file
+from flask import Blueprint, jsonify, request, send_file, url_for
 from app.services.Storage import Storage
 
 
@@ -13,7 +13,10 @@ def index():
 @bp.route('/<idx>', methods=['GET'])
 def get(idx):
     filename, filepath = Storage.get(idx)
-    return send_file(filepath, attachment_filename=filename)
+    try:
+        return send_file(filepath, attachment_filename=filename)
+    except FileNotFoundError:
+        return jsonify(error="File not found on disk"), 404
 
 
 @bp.route('', methods=['POST'])
@@ -31,4 +34,6 @@ def post():
 
 @bp.route('/meta/<idx>', methods=['GET'])
 def get_meta(idx):
-    return jsonify(Storage.get_meta(idx))
+    meta = Storage.get_meta(idx)
+    meta['link'] = url_for('index.get', idx=idx)
+    return jsonify(meta)
