@@ -16,6 +16,8 @@ class Config(object):
 
     MONGO_URI = 'mongodb://%s:%s@%s/%s' % (username, password, host, database)
 
+    STORAGE_PATH = getenv('STORAGE_PATH')
+
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object(Config())

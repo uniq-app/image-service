@@ -1,30 +1,39 @@
-from flask import Blueprint, jsonify, request
-from app import mongo
-from app.models.image import images
-from uuid import uuid4
+from flask import Blueprint, jsonify, request, send_file, url_for
+from app.services.Storage import Storage
+
 
 bp = Blueprint('index', __name__)
 
 
 @bp.route('/', methods=['GET'])
 def index():
-    return jsonify(status="Hello world!")
+    return jsonify(status="OK")
 
 
-@bp.route('/i', methods=['GET'])
-def i_get():
-    image = {'test': 'test'}
-    images.insert_one(image)
-    rs = images.find({})
-    for r in rs:
-        print(r)
-    return jsonify(status='ok')
+@bp.route('/<idx>', methods=['GET'])
+def get(idx):
+    filename, filepath = Storage.get(idx)
+    try:
+        return send_file(filepath, attachment_filename=filename)
+    except FileNotFoundError:
+        return jsonify(error="File not found on disk"), 404
 
 
-@bp.route('/i', methods=['POST'])
-def i_save():
-    id = uuid4()
-    file = request.files.get('file')
-    # if storage is not None:
-    #     storage.save(file)
-    return jsonify(file=file.filename)
+@bp.route('', methods=['POST'])
+def post():
+    if 'file' not in request.files:
+        return jsonify(file='No file part'), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify(file='No file part'), 400
+
+    file_id = Storage.save(file)
+
+    return jsonify(file_id=file_id)
+
+
+@bp.route('/meta/<idx>', methods=['GET'])
+def get_meta(idx):
+    meta = Storage.get_meta(idx)
+    meta['link'] = url_for('index.get', idx=idx)
+    return jsonify(meta)

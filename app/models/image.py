@@ -1,4 +1,5 @@
 from app import mongo
+from pymongo.collection import Collection
 
 
-images = mongo.db.images
+images: Collection = mongo.db.images
