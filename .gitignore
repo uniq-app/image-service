@@ -134,3 +134,4 @@ dmypy.json
 /app/db.sqlite
 mongo-volume/
 images/
+redis_data/

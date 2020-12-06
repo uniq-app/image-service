@@ -19,14 +19,13 @@ services:
 
   redis:
     container_name: redis
-    image: bitnami/redis:latest
+    image: redis:latest
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     ports:
       - '6379:6379'
     volumes:
-      - 'redis_data:/bitnami/redis/data'
+      - '/redis_data:/bitnami/redis/data'
 
   api:
     container_name: api
@@ -44,4 +43,5 @@ services:
       - 80:80
     depends_on:
       - database
+      - redis
 
