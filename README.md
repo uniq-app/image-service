@@ -13,3 +13,7 @@
     MONGO_DBNAME=database name
     
     GUNICORN_LOG_LEVEL=debug
+    
+    MAX_CONTENT_LENGTH=max uploaded file size in MB
+
+    REDIS_HOST=IP:port for redis
