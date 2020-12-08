@@ -1,5 +1,18 @@
-from app import mongo
+from app.models import db
+from app.models.model import Model
+from datetime import datetime as dt
 from pymongo.collection import Collection
 
 
-images: Collection = mongo.db.images
+class Image(Model):
+    collection: Collection = db.images
+
+    @staticmethod
+    def create(filename, extension):
+        ins = Image({
+            'filename': filename,
+            'extension': extension,
+            'created': dt.timestamp(dt.now())
+        })
+        ins.save()
+        return ins

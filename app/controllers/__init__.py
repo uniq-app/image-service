@@ -1,5 +1,5 @@
-from . import index
+from . import images
 
 
 def init_app(app):
-    app.register_blueprint(index.bp, url_prefix='/images')
+    app.register_blueprint(images.bp, url_prefix='/images')

@@ -1,4 +1,4 @@
-from app.services.Storage import Storage
+from app.services.storage import Storage
 
 
 def init_app(app):
