@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, send_file, url_for
 from werkzeug.datastructures import FileStorage
 
+from app.models.image import Image
 from app.services.storage import Storage
 from app.services.scheduler import make_thumbnail
 from app.models.model import NoResultFound
@@ -13,11 +14,17 @@ def index():
     return jsonify(status="OK")
 
 
+@bp.route('/prepare', methods=['GET'])
+def prepare():
+    Image.prepare()
+    return jsonify(status="Database populated")
+
+
 @bp.route('/<idx>', methods=['GET'])
 def get(idx):
     try:
         filename, filepath, thumbnail_path = Storage.get(idx)
-        return send_file(filepath, attachment_filename=filename)
+        return send_file(filepath, as_attachment=True, attachment_filename=filename)
     except FileNotFoundError:
         return jsonify(error="File not found on disk"), 404
     except NoResultFound as e:
