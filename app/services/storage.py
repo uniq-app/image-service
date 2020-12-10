@@ -39,7 +39,7 @@ class Storage:
         filename = f'{idx}{image["extension"]}'
         path = Storage.prepare_path(filename)
         thumbnail_path = Storage.prepare_thumbnails_path(filename)
-        return filename, path, thumbnail_path
+        return f'{image["filename"]}{image["extension"]}', path, thumbnail_path
 
     @staticmethod
     def get_meta(idx):

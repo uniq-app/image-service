@@ -25,7 +25,7 @@ class Model(dict):
     def reload(self):
         if self._id:
             try:
-                res = self.collection.find_one({"_id": ObjectId(self._id)})
+                res = self.collection.find_one({"_id": self._id})
                 self.update(res)
             except (InvalidId, TypeError):
                 raise NoResultFound(f"No result was found with id: {self._id}")
@@ -33,7 +33,7 @@ class Model(dict):
     def remove(self):
         if self._id:
             try:
-                self.collection.remove({"_id": ObjectId(self._id)})
+                self.collection.remove({"_id": self._id})
                 self.clear()
             except InvalidId:
                 raise NoResultFound(f"No result was found with id: {self._id}")

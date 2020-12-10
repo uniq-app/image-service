@@ -40,6 +40,7 @@ services:
     - ./requirements.txt:/app/requirements.txt
     - ./.env:/.env
     - ./prestart.sh:/app/prestart.sh
+    - ./images:/app/images
     ports:
       - 80:80
     depends_on:
