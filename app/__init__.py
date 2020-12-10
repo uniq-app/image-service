@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from app.celery import make_celery
 from os import getenv
+import mimetypes
 
 load_dotenv()
 
@@ -31,6 +32,8 @@ app.config.from_object(Config())
 mongo = MongoClient(app.config['MONGO_URI'])
 
 celery = make_celery(app)
+
+mimetypes.add_type('image/webp', '.webp')
 
 with app.app_context():
     from . import models, controllers, services

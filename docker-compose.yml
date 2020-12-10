@@ -14,7 +14,6 @@ services:
     volumes:
       - ./docker/database/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
       - ./mongo-volume:/data/db
-      - ./images:/app/images
     ports:
       - '27017-27019:27017-27019'
 
@@ -41,6 +40,7 @@ services:
     - ./requirements.txt:/app/requirements.txt
     - ./.env:/.env
     - ./prestart.sh:/app/prestart.sh
+    - ./images:/app/images
     ports:
       - 80:80
     depends_on:
