@@ -1,6 +1,6 @@
-from app.services.storage import Storage
+from app.services.imageservice import ImageService
 
 
 def init_app(app):
-    Storage.create_directory()
+    ImageService.create_directory()
     return app

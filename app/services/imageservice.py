@@ -1,11 +1,11 @@
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
-from app.models.image import Image
-from app import app
+from app.models.image import Image, ImageRepository
+from flask import current_app as app
 import os
 
 
-class Storage:
+class ImageService:
 
     ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG", ".WEBP"]
 
@@ -21,31 +21,28 @@ class Storage:
             raise Exception("No file")
         else:
             filename, extension = os.path.splitext(secure_filename(file.filename))
-            if extension not in Storage.ALLOWED_EXTENSIONS:
+            if extension not in ImageService.ALLOWED_EXTENSIONS:
                 raise Exception("Wrong extension")
 
-            image: Image = Image.create(filename, extension)
-            path = Storage.prepare_path(f'{image.id}{extension}')
-            thumbnail_path = Storage.prepare_thumbnails_path(f'{image.id}{extension}')
+            image: Image = ImageRepository.create(filename, extension)
+            path = ImageService.prepare_path(f'{image.id}{extension}')
+            thumbnail_path = ImageService.prepare_thumbnails_path(f'{image.id}{extension}')
 
             file.save(path)
 
             return image.id, path, thumbnail_path
 
     @staticmethod
-    def get(idx):
-        image: Image = Image({'_id': idx})
-        image.reload()
-        filename = f'{idx}{image["extension"]}'
-        path = Storage.prepare_path(filename)
-        thumbnail_path = Storage.prepare_thumbnails_path(filename)
-        return f'{image["filename"]}{image["extension"]}', path, thumbnail_path
+    def get_file(idx):
+        image: Image = ImageRepository.get({'_id': idx})
+        internal_filename = f'{idx}{image.extension}'
+        path = ImageService.prepare_path(internal_filename)
+        thumbnail_path = ImageService.prepare_thumbnails_path(internal_filename)
+        return f'{image.filename}{image.extension}', path, thumbnail_path
 
     @staticmethod
-    def get_meta(idx):
-        image: Image = Image({'_id': idx})
-        image.reload()
-        return image
+    def get(idx) -> Image:
+        return ImageRepository.get({'_id': idx})
 
     @staticmethod
     def prepare_path(filename):
