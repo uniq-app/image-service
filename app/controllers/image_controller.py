@@ -2,8 +2,8 @@ from flask import Blueprint, jsonify, request, send_file, url_for
 from werkzeug.datastructures import FileStorage
 
 from app.models.prepare import prepare as prepare_db
-from app.services.imageservice import ImageService
-from app.services.scheduler import make_thumbnail
+from app.services.image_service import ImageService
+from app.services.thumbnail_service import make_thumbnail
 from app.models.image import NoResultFound
 
 bp = Blueprint('images', __name__)
@@ -29,6 +29,12 @@ def get(idx):
         return jsonify(error="File not found on disk"), 404
     except NoResultFound as e:
         return jsonify(error=str(e)), 404
+
+
+@bp.route('/<idx>', methods=['DELETE'])
+def delete(idx):
+    ImageService.delete(idx)
+    return '', 204
 
 
 @bp.route('/thumbnail/<idx>', methods=['GET'])

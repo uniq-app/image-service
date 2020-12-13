@@ -33,16 +33,23 @@ class ImageService:
             return image.id, path, thumbnail_path
 
     @staticmethod
+    def get(idx) -> Image:
+        return ImageRepository.get(idx)
+
+    @staticmethod
     def get_file(idx):
-        image: Image = ImageRepository.get({'_id': idx})
+        image: Image = ImageRepository.get(idx)
         internal_filename = f'{idx}{image.extension}'
         path = ImageService.prepare_path(internal_filename)
         thumbnail_path = ImageService.prepare_thumbnails_path(internal_filename)
         return f'{image.filename}{image.extension}', path, thumbnail_path
 
     @staticmethod
-    def get(idx) -> Image:
-        return ImageRepository.get({'_id': idx})
+    def delete(idx):
+        filename, filepath, thumbnail_path = ImageService.get_file(idx)
+        os.remove(filepath)
+        os.remove(thumbnail_path)
+        ImageRepository.delete(idx)
 
     @staticmethod
     def prepare_path(filename):

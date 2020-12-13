@@ -1,4 +1,4 @@
-from app.services.imageservice import ImageService
+from app.services.image_service import ImageService
 
 
 def init_app(app):

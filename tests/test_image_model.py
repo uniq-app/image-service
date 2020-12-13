@@ -16,42 +16,46 @@ def client():
             yield client
 
 
+def dt_helper(date: dt):
+    return str(date.replace(microsecond=0).replace(tzinfo=tz.utc).isoformat())
+
+
 def test_image(client):
     image = Image(filename='test', extension='test')
     assert image.filename == 'test'
     assert image.extension == 'test'
-    assert image.created == str(dt.utcnow().replace(microsecond=0).replace(tzinfo=tz.utc).isoformat())
+    assert image.created == dt_helper(dt.utcnow())
 
 
 def test_image_repository_create(client):
-        col: Collection = get_db().images
+    col: Collection = get_db().images
 
-        image = ImageRepository.create('test_1', 'test_1')
-        db_filter = {'_id': image._id}
-        s_image = col.find_one(db_filter)
+    image = ImageRepository.create('test_1', 'test_1')
+    db_filter = {'_id': image._id}
+    s_image = col.find_one(db_filter)
 
-        assert image.filename == s_image['filename']
-        assert image.extension == s_image['extension']
-        assert image.created == s_image['created']
+    assert image.filename == s_image['filename']
+    assert image.extension == s_image['extension']
+    assert image.created == s_image['created']
 
-        assert col.delete_one(db_filter).deleted_count == 1
+    assert col.delete_one(db_filter).deleted_count == 1
 
-        close_db()
+    close_db()
 
 
 def test_image_repository_get(client):
     col: Collection = get_db().images
 
     image = ImageRepository.create('test_2', 'test_2')
-    db_filter = {'_id': image._id}
-    s_image = col.find_one(db_filter)
-    image2 = ImageRepository.get(db_filter)
+
+    s_image = col.find_one({'_id': image._id})
+    image2 = ImageRepository.get(image._id)
 
     assert image.filename == s_image['filename'] == image2.filename
     assert image.extension == s_image['extension'] == image2.extension
-    assert image.created == s_image['created'] == str(image2.created.replace(microsecond=0).replace(tzinfo=tz.utc).isoformat())
+    assert image.created == s_image['created'] == dt_helper(image2.created)
 
-    assert col.delete_one(db_filter).deleted_count == 1
+    assert col.delete_one({'_id': image._id}).deleted_count == 1
 
     close_db()
 
@@ -79,7 +83,7 @@ def test_image_repository_delete(client):
     image = ImageRepository.create('test_4', 'test_4')
     db_filter = {'_id': image._id}
 
-    assert ImageRepository.delete(image)
+    assert ImageRepository.delete(image._id)
 
     s_image = col.find_one(db_filter)
     assert s_image is None

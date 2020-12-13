@@ -61,8 +61,8 @@ class ImageRepository:
         return image
 
     @staticmethod
-    def get(image: dict) -> Image:
-        res: dict = ImageRepository.collection.find_one(image)
+    def get(image_id: str) -> Image:
+        res: dict = ImageRepository.collection.find_one({'_id': image_id})
         return ImageRepository.image_schema.load(res)
 
     @staticmethod
@@ -72,9 +72,9 @@ class ImageRepository:
         return res.modified_count == res.matched_count
 
     @staticmethod
-    def delete(image: Image) -> bool:
+    def delete(image_id: str) -> bool:
         # noinspection PyProtectedMember
-        res = ImageRepository.collection.delete_one({'_id': image._id})
+        res = ImageRepository.collection.delete_one({'_id': image_id})
         return res.deleted_count == 1
 
 
