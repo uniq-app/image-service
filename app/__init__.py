@@ -1,7 +1,8 @@
-from flask import Flask
-from dotenv import load_dotenv
 from os import getenv, makedirs
+from dotenv import load_dotenv
+from flask_restx import Api
 from celery import Celery
+from flask import Flask
 import mimetypes
 
 load_dotenv()
@@ -28,6 +29,13 @@ celery.conf.update(
 )
 
 
+api = Api(
+    title='Image service',
+    version='1.0',
+    description='Image data store for UNIQ app'
+)
+
+
 def make_celery_context(flask_app, celery_ins):
     class ContextTask(celery_ins.Task):
         def __call__(self, *args, **kwargs):
@@ -40,7 +48,7 @@ def make_celery_context(flask_app, celery_ins):
 
 def create_app():
     class Config(object):
-        SECRET_KEY = getenv('SECRET_KEY')
+        SERVER_NAME = getenv('SERVER_NAME')
 
         STORAGE_PATH = getenv('STORAGE_PATH')
 
@@ -58,13 +66,15 @@ def create_app():
 
     make_celery_context(flask_app, celery)
 
+    api.init_app(flask_app)
+
     with flask_app.app_context():
         from .models import init_app as init_models
         init_models(flask_app)
         from .services import init_app as init_services
         init_services(flask_app)
         from .controllers import init_app as init_controllers
-        init_controllers(flask_app)
+        init_controllers(flask_app, api)
 
     return flask_app
 

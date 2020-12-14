@@ -53,7 +53,7 @@ def test_image_repository_get(client):
 
     assert image.filename == s_image['filename'] == image2.filename
     assert image.extension == s_image['extension'] == image2.extension
-    assert image.created == s_image['created'] == dt_helper(image2.created)
+    assert image.created == s_image['created'] == image2.created
 
     assert col.delete_one({'_id': image._id}).deleted_count == 1
 
