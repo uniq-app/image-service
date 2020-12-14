@@ -1,7 +1,7 @@
 # image-service
 
 ## .env
-    SECRET_KEY=geenrate your own secret
+    SERVER_NAME=localhost:5000 or just localhost or your domain
     STORAGE_PATH=path where images will be saved
     
     MONGO_INITDB_ROOT_USERNAME=username for admin user

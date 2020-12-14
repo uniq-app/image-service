@@ -16,7 +16,7 @@ class ImageSchema(Schema):
     _id = fields.Str()
     filename = fields.Str()
     extension = fields.Str()
-    created = fields.DateTime()
+    created = fields.Str()
 
     @post_load
     def make_image(self, data, **kwargs):
