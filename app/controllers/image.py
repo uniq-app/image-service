@@ -1,11 +1,17 @@
 from flask import jsonify, request, send_file, url_for
-from flask_restx import Resource, fields
+from flask_restx import Resource, fields, Model
 from werkzeug.datastructures import FileStorage
 
 from app import api
 from app.models.image import NoResultFound
 from app.services import ImageService
 from app.services.thumbnail_service import make_thumbnail
+
+model = Model('Image_upload_response', {
+    'id': fields.String,
+    'file': fields.Url('images', absolute=True),
+})
+api.models[model.name] = model
 
 
 @api.param('idx', 'An ID of photo')
@@ -33,10 +39,6 @@ post_parser.add_argument('file', type=FileStorage, required=True, location='file
 
 
 class ImagesUpload(Resource):
-    model = api.model('Image_upload_response', {
-        'id': fields.String,
-        'file': fields.Url('images', absolute=True),
-    })
 
     @api.expect(post_parser)
     @api.response(200, 'Success', model)
