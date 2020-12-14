@@ -7,12 +7,6 @@ from app.models.image import NoResultFound
 from app.services import ImageService
 from app.services.thumbnail_service import make_thumbnail
 
-model = Model('Image_upload_response', {
-    'id': fields.String,
-    'file': fields.Url('images', absolute=True),
-})
-api.models[model.name] = model
-
 
 @api.param('idx', 'An ID of photo')
 class Images(Resource):
@@ -41,7 +35,7 @@ post_parser.add_argument('file', type=FileStorage, required=True, location='file
 class ImagesUpload(Resource):
 
     @api.expect(post_parser)
-    @api.response(200, 'Success', model)
+    @api.response(200, 'Success')
     def post(self):
         if 'file' not in request.files:
             return {'file': 'No file part'}, 400
