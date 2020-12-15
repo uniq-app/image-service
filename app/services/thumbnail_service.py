@@ -1,5 +1,6 @@
-from app import celery
 from PIL import Image
+
+from app import celery
 
 
 @celery.task(ignore_result=False)

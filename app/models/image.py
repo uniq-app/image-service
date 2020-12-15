@@ -1,14 +1,15 @@
-from pymongo.collection import Collection
-from marshmallow import Schema, fields, post_load
 from datetime import datetime as dt, timezone as tz
 from uuid import uuid4
-from app.models import get_db
 
+from marshmallow import Schema, fields, post_load
+from pymongo.collection import Collection
+
+from app.models import get_db
 
 db = get_db()
 
 
-class NoResultFound(Exception):
+class NoImageFound(Exception):
     pass
 
 
@@ -63,6 +64,8 @@ class ImageRepository:
     @staticmethod
     def get(image_id: str) -> Image:
         res: dict = ImageRepository.collection.find_one({'_id': image_id})
+        if res is None:
+            raise NoImageFound(f"Image with id: <{image_id}> not found.")
         return ImageRepository.image_schema.load(res)
 
     @staticmethod

@@ -1,9 +1,10 @@
-from os import getenv, makedirs
-from dotenv import load_dotenv
-from flask_restx import Api
-from celery import Celery
-from flask import Flask
 import mimetypes
+from os import getenv, makedirs
+
+from celery import Celery
+from dotenv import load_dotenv
+from flask import Flask
+from flask_restx import Api
 
 load_dotenv()
 

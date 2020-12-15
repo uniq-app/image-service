@@ -1,8 +1,11 @@
-from werkzeug.datastructures import FileStorage
-from werkzeug.utils import secure_filename
-from app.models.image import Image, ImageRepository
-from flask import current_app as app
 import os
+
+from flask import current_app as app
+from werkzeug.datastructures import FileStorage
+from werkzeug.exceptions import NotFound
+from werkzeug.utils import secure_filename
+
+from app.models.image import Image, ImageRepository, NoImageFound
 
 
 class ImageService:
@@ -34,11 +37,17 @@ class ImageService:
 
     @staticmethod
     def get(idx) -> Image:
-        return ImageRepository.get(idx)
+        try:
+            return ImageRepository.get(idx)
+        except NoImageFound as e:
+            raise NotFound(str(e))
 
     @staticmethod
     def get_file(idx):
-        image: Image = ImageRepository.get(idx)
+        try:
+            image: Image = ImageRepository.get(idx)
+        except NoImageFound as e:
+            raise NotFound(str(e))
         internal_filename = f'{idx}{image.extension}'
         path = ImageService.prepare_path(internal_filename)
         thumbnail_path = ImageService.prepare_thumbnails_path(internal_filename)
@@ -47,8 +56,11 @@ class ImageService:
     @staticmethod
     def delete(idx):
         filename, filepath, thumbnail_path = ImageService.get_file(idx)
-        os.remove(filepath)
-        os.remove(thumbnail_path)
+        try:
+            os.remove(filepath)
+            os.remove(thumbnail_path)
+        except OSError:
+            pass
         ImageRepository.delete(idx)
 
     @staticmethod
