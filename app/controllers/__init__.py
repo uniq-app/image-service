@@ -12,6 +12,6 @@ def init_app(app, api: Api):
     api.add_resource(Meta, '/images/meta/<string:idx>', endpoint='meta')
     api.add_resource(Thumbnail, '/images/thumbnail/<string:idx>', endpoint='thumbnail')
 
-    if 'ENV' in app.config and app.config['ENV'] == 'development ':
+    if 'ENV' in app.config and app.config['ENV'] == 'development':
         data = api.as_postman(urlvars=False, swagger=True)
         print(' * Postman collection import:', json.dumps(data))

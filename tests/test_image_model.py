@@ -1,11 +1,12 @@
-import pytest
-
-from app.models.image import Image, ImageRepository
-from app.models import get_db, close_db
 from datetime import datetime as dt, timezone as tz
-from pymongo.collection import Collection
+
+import pytest
 from flask import current_app
+from pymongo.collection import Collection
+
 from app import app
+from app.models import get_db, close_db
+from app.models.image import Image, ImageRepository, NoImageFound
 
 
 @pytest.fixture
@@ -87,5 +88,14 @@ def test_image_repository_delete(client):
 
     s_image = col.find_one(db_filter)
     assert s_image is None
+
+    close_db()
+
+
+def test_image_repository_get_not_found(client):
+    col: Collection = get_db().images
+
+    with pytest.raises(NoImageFound):
+        image2 = ImageRepository.get('test_3')
 
     close_db()

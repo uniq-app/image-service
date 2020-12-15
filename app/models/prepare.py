@@ -1,6 +1,6 @@
 from datetime import datetime as dt, timezone as tz
-from app.models import get_db
 
+from app.models import get_db
 
 db = get_db()
 

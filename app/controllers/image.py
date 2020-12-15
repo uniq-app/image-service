@@ -1,9 +1,9 @@
-from flask import jsonify, request, send_file, url_for
-from flask_restx import Resource, fields, Model
+from flask import request, send_file, url_for
+from flask_restx import Resource
 from werkzeug.datastructures import FileStorage
+from werkzeug.exceptions import NotFound
 
 from app import api
-from app.models.image import NoResultFound
 from app.services import ImageService
 from app.services.thumbnail_service import make_thumbnail
 
@@ -18,9 +18,7 @@ class Images(Resource):
             filename, filepath, thumbnail_path = ImageService.get_file(idx)
             return send_file(filepath, as_attachment=True, attachment_filename=filename)
         except FileNotFoundError:
-            return {"error": 'File not found on disk'}, 404
-        except NoResultFound as e:
-            return {'error': str(e)}, 404
+            raise NotFound('File not found on disk')
 
     @api.response(204, 'No Content')
     def delete(self, idx):
