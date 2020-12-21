@@ -33,7 +33,7 @@ services:
       context: .
       dockerfile: ./docker/image-service/Dockerfile
     environment:
-      APP_MODULE: app.__init__:app
+      NGINX_MAX_UPLOAD: ${MAX_CONTENT_LENGTH}m
       LOG_LEVEL: ${GUNICORN_LOG_LEVEL}
     volumes:
     - ./app:/app/app
