@@ -14,9 +14,9 @@ class ImageService:
 
     @staticmethod
     def create_directory():
-        if not os.path.exists(app.config['STORAGE_PATH']):
-            os.makedirs(app.config['STORAGE_PATH'])
-            os.makedirs(os.path.join(app.config['STORAGE_PATH'], 'thumbnails'))
+        if not os.path.exists(os.path.join(os.path.dirname(app.root_path), app.config['STORAGE_PATH'])):
+            os.makedirs(os.path.join(os.path.dirname(app.root_path), app.config['STORAGE_PATH']))
+            os.makedirs(os.path.join(os.path.dirname(app.root_path), app.config['STORAGE_PATH'], 'thumbnails'))
 
     @staticmethod
     def save(file: FileStorage):
@@ -65,8 +65,8 @@ class ImageService:
 
     @staticmethod
     def prepare_path(filename):
-        return os.path.join(os.path.dirname(app.instance_path), app.config['STORAGE_PATH'], filename)
+        return os.path.join(os.path.dirname(app.root_path), app.config['STORAGE_PATH'], filename)
 
     @staticmethod
     def prepare_thumbnails_path(filename):
-        return os.path.join(os.path.dirname(app.instance_path), app.config['STORAGE_PATH'], 'thumbnails', filename)
+        return os.path.join(os.path.dirname(app.root_path), app.config['STORAGE_PATH'], 'thumbnails', filename)

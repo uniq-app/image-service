@@ -5,7 +5,7 @@ from pymongo.database import Database
 def get_db() -> Database:
     if 'db' not in g:
         from pymongo import MongoClient
-        g.db = MongoClient(current_app.config["MONGO_URI"]).images
+        g.db = MongoClient(current_app.config["MONGO_URI"], connect=False).images
     return g.db
 
 
