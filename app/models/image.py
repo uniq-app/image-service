@@ -18,6 +18,7 @@ class ImageSchema(Schema):
     filename = fields.Str()
     extension = fields.Str()
     created = fields.Str()
+    thumbnail_task = fields.Str()
 
     @post_load
     def make_image(self, data, **kwargs):
@@ -25,11 +26,12 @@ class ImageSchema(Schema):
 
 
 class Image:
-    def __init__(self, filename: str, extension: str, created: str = None, _id: str = None):
+    def __init__(self, filename: str, extension: str, created: str = None, _id: str = None, thumbnail_task: str = None):
         self._id = _id or uuid4().hex
         self.filename = filename
         self.extension = extension
         self.created = created or str(dt.utcnow().replace(microsecond=0).replace(tzinfo=tz.utc).isoformat())
+        self.thumbnail_task = thumbnail_task
 
     @property
     def id(self):
@@ -44,7 +46,8 @@ class Image:
             '_id': self._id,
             'filename': self.filename,
             'extension': self.extension,
-            'created': self.created
+            'created': self.created,
+            'thumbnail_task': self.thumbnail_task
         }
 
 
