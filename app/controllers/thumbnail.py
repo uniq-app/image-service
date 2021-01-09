@@ -1,4 +1,4 @@
-from flask import send_file
+from flask import send_file, json
 from flask_restx import Resource
 from werkzeug.exceptions import NotFound
 
@@ -12,9 +12,12 @@ class Thumbnail(Resource):
 
     @api.response(200, "Success")
     @api.response(404, "Not Found")
+    @api.response(500, "Internal Server Error")
     def get(self, idx):
         try:
-            filename, filepath, thumbnail_path = ImageService.get_file(idx)
+            filename, thumbnail_path = ImageService.get_thumbnail(idx)
             return send_file(thumbnail_path, as_attachment=True, attachment_filename=filename)
         except FileNotFoundError:
             raise NotFound('File not found on disk')
+        except ValueError as ve:
+            return json.loads(str(ve)), 500
