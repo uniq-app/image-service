@@ -42,7 +42,7 @@ services:
     - ./prestart.sh:/app/prestart.sh
     - ./images:/app/images
     ports:
-      - 80:80
+      - 8081:80
     depends_on:
       - database
       - redis
