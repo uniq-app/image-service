@@ -18,7 +18,7 @@ class ImageSchema(Schema):
     filename = fields.Str()
     extension = fields.Str()
     created = fields.Str()
-    thumbnail_task = fields.Str()
+    thumbnail_task = fields.Str(allow_none=True)
 
     @post_load
     def make_image(self, data, **kwargs):
