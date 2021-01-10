@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageOps
 
 from app import celery
 
@@ -9,6 +9,7 @@ def make_thumbnail(src_path, dest_path):
         with Image.open(src_path) as image:
             image = image.convert(mode='RGB')
             image.thumbnail((300, 300))
+            image = ImageOps.exif_transpose(image)
             image.save(dest_path)
     except OSError as e:
         raise e
