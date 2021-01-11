@@ -20,7 +20,7 @@ celery.conf.update(
     result_serializer='json',
     timezone='Europe/Warsaw',
     enable_utc=True,
-    broker_url=f"redis://{getenv('REDIS_HOST')}",
+    broker_url=f"redis://:{getenv('REDIS_PASSWORD')}@{getenv('REDIS_HOST')}",
     result_backend=f"mongodb://{getenv('MONGO_USER')}:{getenv('MONGO_PASS')}@{getenv('MONGO_HOST')}/{getenv('MONGO_DBNAME')}",
     mongodb_backend_settings={
         'options': {

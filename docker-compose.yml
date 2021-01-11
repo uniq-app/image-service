@@ -20,8 +20,9 @@ services:
   redis:
     container_name: redis
     image: redis:latest
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      - ALLOW_EMPTY_PASSWORD=no
     ports:
       - '6379:6379'
     volumes:
