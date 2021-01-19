@@ -1,17 +1,18 @@
 import os
 
+from celery.result import AsyncResult
 from flask import current_app as app
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import NotFound
 from werkzeug.utils import secure_filename
-from celery.result import AsyncResult
 
-from app.models.image import Image, ImageRepository, NoImageFound
+from app.exceptions.no_image_found import NoImageFound
+from app.models.image import Image
+from app.repositories.image import ImageRepository
 from app.services.thumbnail_service import make_thumbnail, check_thumbnail
 
 
 class ImageService:
-
     ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG", ".WEBP"]
 
     @staticmethod

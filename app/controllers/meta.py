@@ -7,7 +7,7 @@ from app.services import ImageService
 
 @api.route('/images/meta/<string:idx>', endpoint='images/meta')
 @api.param('idx', 'An ID of photo')
-class Meta(Resource):
+class MetadataController(Resource):
 
     @api.response(200, "Success")
     @api.response(404, "Not Found")
