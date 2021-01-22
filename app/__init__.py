@@ -55,6 +55,10 @@ def create_app():
 
         MAX_CONTENT_LENGTH = int(getenv('MAX_CONTENT_LENGTH')) * 1024 * 1024
 
+        SWAGGER = getenv('SWAGGER', "False") == "True"
+
+        CONVERT_TO_RGB = getenv('CONVERT_TO_RGB', "False") == "True"
+
     flask_app = Flask(__name__, instance_relative_config=True)
     flask_app.config.from_object(Config())
 
@@ -67,7 +71,7 @@ def create_app():
 
     make_celery_context(flask_app, celery)
 
-    api.init_app(flask_app)
+    api.init_app(flask_app, add_specs=flask_app.config.get('SWAGGER'))
 
     with flask_app.app_context():
         from .models import init_app as init_models

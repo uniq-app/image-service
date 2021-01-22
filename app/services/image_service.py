@@ -32,9 +32,8 @@ class ImageService:
 
             image: Image = ImageRepository.create(filename, extension)
             path = ImageService.prepare_path(f'{image.id}{extension}')
-            thumbnail_path = ImageService.prepare_thumbnails_path(f'{image.id}{extension}')
-
             file.save(path)
+            thumbnail_path = ImageService.prepare_thumbnails_path(f'{image.id}{extension}')
 
             return image, path, thumbnail_path
 
@@ -89,6 +88,6 @@ class ImageService:
 
     @staticmethod
     def schedule_thumbnail(image: Image, file_path, thumbnail_path):
-        task: AsyncResult = make_thumbnail.delay(file_path, thumbnail_path)
+        task: AsyncResult = make_thumbnail.delay(file_path, thumbnail_path, app.config.get('CONVERT_TO_RGB'))
         image.thumbnail_task = task.task_id
         ImageRepository.update(image)
