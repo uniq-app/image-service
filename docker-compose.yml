@@ -2,8 +2,8 @@ version: '3.1'
 
 services:
 
-  database:
-    container_name: db
+  db:
+    container_name: image_db
     image: mongo:4.2-bionic
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
@@ -18,7 +18,7 @@ services:
       - '27017-27019:27017-27019'
 
   redis:
-    container_name: redis
+    container_name: image_redis
     image: redis:latest
     command: redis-server --requirepass ${REDIS_PASSWORD}
     environment:
@@ -29,7 +29,7 @@ services:
       - '/redis_data:/bitnami/redis/data'
 
   api:
-    container_name: api
+    container_name: image_api
     build:
       context: .
       dockerfile: ./docker/image-service/Dockerfile
@@ -44,6 +44,6 @@ services:
     ports:
       - 8081:80
     depends_on:
-      - database
+      - db
       - redis
 
