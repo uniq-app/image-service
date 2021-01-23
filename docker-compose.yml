@@ -35,7 +35,6 @@ services:
       dockerfile: ./docker/image-service/Dockerfile
     environment:
       NGINX_MAX_UPLOAD: ${MAX_CONTENT_LENGTH}m
-      LOG_LEVEL: ${GUNICORN_LOG_LEVEL}
     volumes:
     - ./app:/app/app
     - ./requirements.txt:/app/requirements.txt
