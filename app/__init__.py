@@ -57,6 +57,8 @@ def create_app():
 
         SWAGGER = getenv('SWAGGER', "False") == "True"
 
+        CONVERT_TO_RGB = getenv('CONVERT_TO_RGB', "False") == "True"
+
     flask_app = Flask(__name__, instance_relative_config=True)
     flask_app.config.from_object(Config())
 

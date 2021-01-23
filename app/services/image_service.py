@@ -1,17 +1,18 @@
 import os
 
+from celery.result import AsyncResult
 from flask import current_app as app
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import NotFound
 from werkzeug.utils import secure_filename
-from celery.result import AsyncResult
 
-from app.models.image import Image, ImageRepository, NoImageFound
+from app.exceptions.no_image_found import NoImageFound
+from app.models.image import Image
+from app.repositories.image import ImageRepository
 from app.services.thumbnail_service import make_thumbnail, check_thumbnail
 
 
 class ImageService:
-
     ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".JPG", ".JPEG", ".PNG", ".WEBP"]
 
     @staticmethod
@@ -31,9 +32,8 @@ class ImageService:
 
             image: Image = ImageRepository.create(filename, extension)
             path = ImageService.prepare_path(f'{image.id}{extension}')
-            thumbnail_path = ImageService.prepare_thumbnails_path(f'{image.id}{extension}')
-
             file.save(path)
+            thumbnail_path = ImageService.prepare_thumbnails_path(f'{image.id}{extension}')
 
             return image, path, thumbnail_path
 
@@ -88,6 +88,6 @@ class ImageService:
 
     @staticmethod
     def schedule_thumbnail(image: Image, file_path, thumbnail_path):
-        task: AsyncResult = make_thumbnail.delay(file_path, thumbnail_path)
+        task: AsyncResult = make_thumbnail.delay(file_path, thumbnail_path, app.config.get('CONVERT_TO_RGB'))
         image.thumbnail_task = task.task_id
         ImageRepository.update(image)

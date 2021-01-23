@@ -5,8 +5,10 @@ from flask import current_app
 from pymongo.collection import Collection
 
 from app import app
+from app.exceptions.no_image_found import NoImageFound
 from app.models import get_db, close_db
-from app.models.image import Image, ImageRepository, NoImageFound
+from app.models.image import Image
+from app.repositories.image import ImageRepository
 
 
 @pytest.fixture
